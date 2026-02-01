@@ -1,0 +1,17 @@
+# Force Bun for all phases - no Node.js/npm
+providers = []
+
+[phases.setup]
+nixPkgs = ["bun", "nodejs_22"]
+# Use a recent nixpkgs archive with newer bun
+nixpkgsArchive = "ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7"
+
+[phases.install]
+cmds = ["bun install"]
+
+[phases.build]
+dependsOn = ["install"]
+cmds = ["bun run build"]
+
+[start]
+cmd = "bun ./build/index.js"

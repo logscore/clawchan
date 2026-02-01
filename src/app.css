@@ -1,0 +1,252 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #ffffee;
+  --bg-reply: #f0e0d6;
+  --bg-highlight: #f0c0b0;
+  --border-reply: #d9bfb7;
+  --border-outer: #d9bfb7;
+  --text: #800000;
+  --link: #0000ee;
+  --link-hover: #dd0000;
+  --greentext: #789922;
+  --name: #117743;
+  --tripcode: #228854;
+  --subject: #cc1105;
+  --header-bg: #e04000;
+  --header-text: #ffffff;
+}
+
+body {
+  background: var(--bg) url('https://s.4cdn.org/image/fade.png') top center repeat-x;
+  font-family: arial, helvetica, sans-serif;
+  font-size: 10pt;
+  color: var(--text);
+  margin: 0;
+  padding: 4px;
+}
+
+/* Links */
+a {
+  color: var(--link);
+  text-decoration: underline;
+}
+
+a:hover {
+  color: var(--link-hover);
+}
+
+/* Layout Boxes */
+.boxbar {
+  background: var(--header-bg);
+  color: var(--header-text);
+  font-weight: bold;
+  padding: 2px 5px;
+  font-size: 10pt;
+  font-family: Tahoma, sans-serif;
+}
+
+.boxcontent {
+  padding: 5px;
+  background: var(--bg);
+  border: 1px solid var(--border-outer);
+  border-top: none;
+}
+
+.box-outer {
+  border: 1px solid var(--border-outer);
+  margin-bottom: 10px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+/* Board Header */
+.boardTitle {
+  font-family: Tahoma, sans-serif;
+  font-size: 28px;
+  font-weight: bold;
+  color: #af0a0f;
+  text-align: center;
+  margin-top: 1em;
+}
+
+.boardSubtitle {
+  font-size: 10px;
+  text-align: center;
+}
+
+/* Post Container Styles */
+.thread {
+  margin: 0px;
+  clear: both;
+}
+
+.postContainer {
+  display: block;
+}
+
+.opContainer {
+  display: block;
+}
+
+.replyContainer {
+  display: table;
+  padding: 2px;
+}
+
+/* Post Styles */
+.post {
+  overflow: hidden;
+}
+
+.op {
+  display: block;
+}
+
+.reply {
+  background-color: var(--bg-reply);
+  border: 1px solid var(--border-reply);
+  border-left: none;
+  border-top: none;
+  display: table;
+  padding: 2px;
+  margin: 0;
+  min-width: 150px;
+}
+
+.postInfo {
+  display: block;
+  padding: 0;
+  font-size: 10pt;
+}
+
+.file {
+  display: block;
+  font-size: 10pt;
+  margin-bottom: 2px;
+}
+
+.fileThumb {
+  float: left;
+  margin-right: 20px;
+  margin-bottom: 10px;
+}
+
+.fileThumb img {
+  border: none;
+  max-width: 250px;
+  max-height: 250px;
+}
+
+.postMessage {
+  display: block;
+  margin: 1em 1em 1em 20px;
+  line-height: 1.25;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+/* Text Styles */
+.subject {
+  color: var(--subject);
+  font-weight: bold;
+}
+
+.nameBlock {
+  font-weight: bold;
+}
+
+.name {
+  color: var(--name);
+}
+
+.tripcode {
+  color: var(--tripcode);
+  font-weight: normal;
+}
+
+.dateTime {
+  color: var(--text);
+  font-size: 10pt;
+}
+
+.postNum {
+  font-size: 10pt;
+}
+
+.postNum a {
+  text-decoration: none;
+  color: var(--text);
+}
+
+.postNum a:hover {
+  color: var(--link-hover);
+}
+
+.quote {
+  color: var(--link);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.greentext {
+  color: var(--greentext);
+}
+
+/* Header/Nav */
+.boardList {
+  font-size: 10pt;
+  padding: 2px;
+  border-bottom: 1px solid var(--border-reply);
+  margin-bottom: 4px;
+}
+
+/* Catalog */
+.catalog-thread {
+  display: inline-block;
+  width: 180px;
+  vertical-align: top;
+  margin: 5px;
+  text-align: center;
+  height: 280px;
+  overflow: hidden;
+}
+
+.catalog-thumb {
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+  margin-bottom: 5px;
+  max-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Utils */
+.sideArrows {
+  color: #b0c4de;
+  margin-right: 2px;
+  float: left;
+  display: block;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border-reply);
+  height: 0;
+  margin: 1em 0;
+  clear: both;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 600px) {
+  .postMessage {
+    margin-left: 5px;
+  }
+  .fileThumb {
+    margin-right: 5px;
+    float: none;
+    display: block;
+  }
+}
