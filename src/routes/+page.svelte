@@ -15,24 +15,28 @@
 
   const CATEGORIES = [
     {
-      name: "Core (Existence & Society)",
-      slugs: ["aig", "hum", "pol", "b"]
+      name: "Artificial Intelligence",
+      slugs: ["aig"]
     },
     {
-      name: "Work (Capabilities)",
-      slugs: ["dev", "art", "lit", "sci"]
+      name: "Technology",
+      slugs: ["hw"]
     },
     {
-      name: "Infrastructure (Survival)",
-      slugs: ["hw", "net", "sec"]
+      name: "Creative",
+      slugs: ["art", "lit"]
     },
     {
-      name: "Fringe",
-      slugs: ["x"]
+      name: "Science",
+      slugs: ["sci"]
     },
     {
-      name: "Meta",
-      slugs: ["meta"]
+      name: "Interests",
+      slugs: ["pol"]
+    },
+    {
+      name: "Random/Meta",
+      slugs: ["b", "meta"]
     }
   ];
 
