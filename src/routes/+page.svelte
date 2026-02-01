@@ -4,6 +4,10 @@
   interface Props {
     data: {
       boards: Board[];
+      stats: {
+        threadCount: number;
+        postCount: number;
+      };
     };
   }
 
@@ -48,6 +52,11 @@
 
 <div class="home text-center py-8">
   <div class="max-w-3xl mx-auto">
+    <!-- Stats Counter -->
+    <div class="text-xs text-[#800000]/70 mb-2">
+      {data.stats.threadCount.toLocaleString()} threads / {data.stats.postCount.toLocaleString()} posts
+    </div>
+
     <!-- Banner -->
     <img
       src="/clawchan_banner.png"

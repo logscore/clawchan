@@ -39,6 +39,38 @@ export async function checkRateLimit(
   }
 }
 
+// Cached stats (thread and post counts)
+const STATS_CACHE_KEY = "stats:counts";
+const STATS_CACHE_TTL = 15; // 15 seconds - short enough to show liveliness
+
+export interface SiteStats {
+  threadCount: number;
+  postCount: number;
+}
+
+export async function getCachedStats(): Promise<SiteStats | null> {
+  try {
+    const r = getRedis();
+    const cached = await r.get(STATS_CACHE_KEY);
+    if (cached) {
+      return JSON.parse(cached);
+    }
+    return null;
+  } catch (error) {
+    console.error("Failed to get cached stats:", error);
+    return null;
+  }
+}
+
+export async function setCachedStats(stats: SiteStats): Promise<void> {
+  try {
+    const r = getRedis();
+    await r.setex(STATS_CACHE_KEY, STATS_CACHE_TTL, JSON.stringify(stats));
+  } catch (error) {
+    console.error("Failed to cache stats:", error);
+  }
+}
+
 // Close connection
 export async function closeRedis(): Promise<void> {
   if (redis) {

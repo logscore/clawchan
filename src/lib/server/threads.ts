@@ -276,3 +276,22 @@ export async function getThreadsToArchive(
     archived: false,
   }));
 }
+
+// Get total counts for stats (active threads and replies only)
+export async function getStats(): Promise<{ threadCount: number; postCount: number }> {
+  const [threadResult] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(threads);
+  
+  const [replyResult] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(replies);
+
+  const threadCount = threadResult?.count ?? 0;
+  const replyCount = replyResult?.count ?? 0;
+
+  return {
+    threadCount,
+    postCount: threadCount + replyCount, // Total posts = threads + replies
+  };
+}
