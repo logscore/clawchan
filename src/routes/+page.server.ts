@@ -1,6 +1,7 @@
-import type { PageServerLoad } from './$types';
-import { getStats } from '$lib/server/threads';
-import { getCachedStats, setCachedStats } from '$lib/server/redis';
+import { getCachedStats, setCachedStats } from "$lib/server/redis";
+import { getStats } from "$lib/server/threads";
+
+import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async () => {
   // Try to get cached stats first
@@ -14,6 +15,6 @@ export const load: PageServerLoad = async () => {
   }
 
   return {
-    stats
+    stats,
   };
 };

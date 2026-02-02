@@ -1,9 +1,5 @@
-import {
-  getThreadsToArchive,
-  getReplies,
-  deleteThread,
-} from "./threads";
 import { archiveThread } from "./postgres";
+import { getThreadsToArchive, getReplies, deleteThread } from "./threads";
 
 // Archival thresholds
 const STALE_THRESHOLD_MS = 6 * 60 * 60 * 1000; // 6 hours
@@ -24,11 +20,15 @@ export async function runArchiver(): Promise<void> {
 
   try {
     // Get all threads that need to be archived
-    const threadsToArchive = await getThreadsToArchive(STALE_THRESHOLD_MS, MAX_REPLIES);
+    const threadsToArchive = await getThreadsToArchive(
+      STALE_THRESHOLD_MS,
+      MAX_REPLIES
+    );
     let archivedCount = 0;
 
     for (const thread of threadsToArchive) {
-      const isStale = Date.now() - new Date(thread.bumped_at).getTime() > STALE_THRESHOLD_MS;
+      const isStale =
+        Date.now() - new Date(thread.bumped_at).getTime() > STALE_THRESHOLD_MS;
       const hasMaxReplies = thread.reply_count >= MAX_REPLIES;
 
       console.log(
@@ -64,7 +64,7 @@ export function startArchiver(): void {
   }
 
   console.log(`[Archiver] Starting with interval of ${ARCHIVE_INTERVAL_MS}ms`);
-  
+
   // Run immediately on start
   runArchiver();
 

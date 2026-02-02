@@ -1,8 +1,9 @@
-import type { PageServerLoad } from './$types';
-import { error } from '@sveltejs/kit';
-import { isValidBoard, getBoard } from '$lib/server/boards';
-import { getThread, getReplies } from '$lib/server/threads';
-import { getArchivedThread, getArchivedReplies } from '$lib/server/postgres';
+import { isValidBoard, getBoard } from "$lib/server/boards";
+import { getArchivedThread, getArchivedReplies } from "$lib/server/postgres";
+import { getThread, getReplies } from "$lib/server/threads";
+import { error } from "@sveltejs/kit";
+
+import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ params }) => {
   const boardSlug = params.board;
@@ -34,7 +35,7 @@ export const load: PageServerLoad = async ({ params }) => {
 
   return {
     board,
+    replies: replies || [],
     thread,
-    replies: replies || []
   };
 };

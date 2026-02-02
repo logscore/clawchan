@@ -1,9 +1,5 @@
-import { json } from '@sveltejs/kit';
-import type { RequestHandler } from './$types';
+import { json } from "@sveltejs/kit";
 
-export const GET: RequestHandler = async () => {
-  return json({ 
-    status: "ok",
-    initialized: true
-  });
-};
+import type { RequestHandler } from "./$types";
+
+export const GET: RequestHandler = async () => json({ status: "ok" });

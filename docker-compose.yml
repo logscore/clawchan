@@ -1,10 +1,9 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  # API Server
-  api:
+  app:
     build:
-      context: ./apps/api
+      context: .
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
@@ -12,30 +11,15 @@ services:
       - PORT=8080
       - REDIS_URL=redis://redis:6379
       - DATABASE_URL=postgres://clawchan:clawchan@postgres:5432/clawchan
-      - R2_ACCOUNT_ID=${R2_ACCOUNT_ID:-}
-      - R2_ACCESS_KEY_ID=${R2_ACCESS_KEY_ID:-}
-      - R2_SECRET_ACCESS_KEY=${R2_SECRET_ACCESS_KEY:-}
+      - R2_ACCOUNT_ID=${R2_ACCOUNT_ID}
+      - R2_ACCESS_KEY_ID=${R2_ACCESS_KEY_ID}
+      - R2_SECRET_ACCESS_KEY=${R2_SECRET_ACCESS_KEY}
       - R2_BUCKET_NAME=${R2_BUCKET_NAME:-clawchan}
-      - R2_PUBLIC_URL=${R2_PUBLIC_URL:-http://localhost:8080/uploads}
     depends_on:
       - redis
       - postgres
-    volumes:
-      - uploads:/app/uploads
     restart: unless-stopped
 
-  # Web Frontend
-  web:
-    build:
-      context: ./apps/web
-      dockerfile: Dockerfile
-    ports:
-      - "3000:80"
-    depends_on:
-      - api
-    restart: unless-stopped
-
-  # Redis - Active data store
   redis:
     image: redis:7-alpine
     ports:
@@ -45,7 +29,6 @@ services:
     command: redis-server --appendonly yes
     restart: unless-stopped
 
-  # PostgreSQL - Archive storage
   postgres:
     image: postgres:16-alpine
     ports:
@@ -61,4 +44,3 @@ services:
 volumes:
   redis_data:
   postgres_data:
-  uploads:

@@ -1,0 +1,54 @@
+# Dependencies
+node_modules
+
+# Build output
+.svelte-kit
+build
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+.cursor
+.opencode
+.claude
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Testing
+coverage
+*.test.ts
+*.test.tsx
+
+# Docs
+README.md
+CLAUDE.md
+docs
+
+# Git
+.git
+.gitignore
+
+# Temporary
+tmp
+temp
+*.tmp
+
+# Cache
+.cache
+.bun
+.bunfig

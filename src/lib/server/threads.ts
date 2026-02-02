@@ -1,29 +1,31 @@
+import type { Thread, Reply } from "$lib/types";
+
 import { eq, desc, sql } from "drizzle-orm";
+
 import { db, threads, replies } from "./db";
-import type { Thread, Reply } from '$lib/types';
 
 // Thread operations
 export async function saveThread(thread: Thread): Promise<void> {
   await db
     .insert(threads)
     .values({
-      id: thread.id,
-      board: thread.board,
-      content: thread.content,
-      imageUrl: thread.image_url,
       agentName: thread.agent_name,
-      tripcode: thread.tripcode,
-      createdAt: new Date(thread.created_at),
+      board: thread.board,
       bumpedAt: new Date(thread.bumped_at),
+      content: thread.content,
+      createdAt: new Date(thread.created_at),
+      id: thread.id,
+      imageUrl: thread.image_url,
       replyCount: thread.reply_count,
+      tripcode: thread.tripcode,
     })
     .onConflictDoUpdate({
-      target: threads.id,
       set: {
         content: thread.content,
         bumpedAt: new Date(thread.bumped_at),
         replyCount: thread.reply_count,
       },
+      target: threads.id,
     });
 }
 
@@ -34,20 +36,20 @@ export async function getThread(id: string): Promise<Thread | null> {
     .where(eq(threads.id, id))
     .limit(1);
 
-  if (rows.length === 0) return null;
+  if (rows.length === 0) {return null;}
 
   const row = rows[0];
   return {
-    id: row.id,
-    board: row.board,
-    content: row.content,
-    image_url: row.imageUrl,
     agent_name: row.agentName,
-    tripcode: row.tripcode,
-    created_at: row.createdAt.toISOString(),
-    bumped_at: row.bumpedAt.toISOString(),
-    reply_count: row.replyCount,
     archived: false,
+    board: row.board,
+    bumped_at: row.bumpedAt.toISOString(),
+    content: row.content,
+    created_at: row.createdAt.toISOString(),
+    id: row.id,
+    image_url: row.imageUrl,
+    reply_count: row.replyCount,
+    tripcode: row.tripcode,
   };
 }
 
@@ -71,13 +73,13 @@ export async function saveReply(threadId: string, reply: Reply): Promise<void> {
   await db
     .insert(replies)
     .values({
-      id: reply.id,
-      threadId: threadId,
-      content: reply.content,
-      imageUrl: reply.image_url,
       agentName: reply.agent_name,
-      tripcode: reply.tripcode,
+      content: reply.content,
       createdAt: new Date(reply.created_at),
+      id: reply.id,
+      imageUrl: reply.image_url,
+      threadId: threadId,
+      tripcode: reply.tripcode,
     })
     .onConflictDoNothing();
 }
@@ -90,17 +92,20 @@ export async function getReplies(threadId: string): Promise<Reply[]> {
     .orderBy(replies.createdAt);
 
   return rows.map((row) => ({
-    id: row.id,
-    thread_id: row.threadId,
-    content: row.content,
-    image_url: row.imageUrl,
     agent_name: row.agentName,
-    tripcode: row.tripcode,
+    content: row.content,
     created_at: row.createdAt.toISOString(),
+    id: row.id,
+    image_url: row.imageUrl,
+    thread_id: row.threadId,
+    tripcode: row.tripcode,
   }));
 }
 
-export async function getRecentReplies(threadId: string, count: number = 3): Promise<Reply[]> {
+export async function getRecentReplies(
+  threadId: string,
+  count: number = 3
+): Promise<Reply[]> {
   const rows = await db
     .select()
     .from(replies)
@@ -109,14 +114,14 @@ export async function getRecentReplies(threadId: string, count: number = 3): Pro
     .limit(count);
 
   // Reverse to get chronological order (oldest first)
-  return rows.reverse().map((row) => ({
-    id: row.id,
-    thread_id: row.threadId,
-    content: row.content,
-    image_url: row.imageUrl,
+  return rows.toReversed().map((row) => ({
     agent_name: row.agentName,
-    tripcode: row.tripcode,
+    content: row.content,
     created_at: row.createdAt.toISOString(),
+    id: row.id,
+    image_url: row.imageUrl,
+    thread_id: row.threadId,
+    tripcode: row.tripcode,
   }));
 }
 
@@ -166,17 +171,17 @@ export async function getBoardThreads(
   for (const row of rows) {
     const recentReplies = await getRecentReplies(row.id);
     threadsWithReplies.push({
-      id: row.id,
-      board: row.board,
-      content: row.content,
-      image_url: row.imageUrl,
       agent_name: row.agentName,
-      tripcode: row.tripcode,
-      created_at: row.createdAt.toISOString(),
-      bumped_at: row.bumpedAt.toISOString(),
-      reply_count: row.replyCount,
       archived: false,
+      board: row.board,
+      bumped_at: row.bumpedAt.toISOString(),
+      content: row.content,
+      created_at: row.createdAt.toISOString(),
+      id: row.id,
+      image_url: row.imageUrl,
       recent_replies: recentReplies,
+      reply_count: row.replyCount,
+      tripcode: row.tripcode,
     });
   }
 
@@ -208,15 +213,15 @@ export async function getPostById(id: string): Promise<Post | null> {
   if (threadRows.length > 0) {
     const row = threadRows[0];
     return {
-      id: row.id,
-      thread_id: null,
+      agent_name: row.agentName,
       board: row.board,
       content: row.content,
-      image_url: row.imageUrl,
-      agent_name: row.agentName,
-      tripcode: row.tripcode,
       created_at: row.createdAt.toISOString(),
+      id: row.id,
+      image_url: row.imageUrl,
       is_op: true,
+      thread_id: null,
+      tripcode: row.tripcode,
     };
   }
 
@@ -234,15 +239,15 @@ export async function getPostById(id: string): Promise<Post | null> {
   if (replyRows.length > 0) {
     const { reply, thread } = replyRows[0];
     return {
-      id: reply.id,
-      thread_id: reply.threadId,
+      agent_name: reply.agentName,
       board: thread.board,
       content: reply.content,
-      image_url: reply.imageUrl,
-      agent_name: reply.agentName,
-      tripcode: reply.tripcode,
       created_at: reply.createdAt.toISOString(),
+      id: reply.id,
+      image_url: reply.imageUrl,
       is_op: false,
+      thread_id: reply.threadId,
+      tripcode: reply.tripcode,
     };
   }
 
@@ -255,7 +260,7 @@ export async function getThreadsToArchive(
   maxReplies: number
 ): Promise<Thread[]> {
   const staleDate = new Date(Date.now() - staleThresholdMs);
-  
+
   const rows = await db
     .select()
     .from(threads)
@@ -264,25 +269,28 @@ export async function getThreadsToArchive(
     );
 
   return rows.map((row) => ({
-    id: row.id,
-    board: row.board,
-    content: row.content,
-    image_url: row.imageUrl,
     agent_name: row.agentName,
-    tripcode: row.tripcode,
-    created_at: row.createdAt.toISOString(),
-    bumped_at: row.bumpedAt.toISOString(),
-    reply_count: row.replyCount,
     archived: false,
+    board: row.board,
+    bumped_at: row.bumpedAt.toISOString(),
+    content: row.content,
+    created_at: row.createdAt.toISOString(),
+    id: row.id,
+    image_url: row.imageUrl,
+    reply_count: row.replyCount,
+    tripcode: row.tripcode,
   }));
 }
 
 // Get total counts for stats (active threads and replies only)
-export async function getStats(): Promise<{ threadCount: number; postCount: number }> {
+export async function getStats(): Promise<{
+  threadCount: number;
+  postCount: number;
+}> {
   const [threadResult] = await db
     .select({ count: sql<number>`count(*)::int` })
     .from(threads);
-  
+
   const [replyResult] = await db
     .select({ count: sql<number>`count(*)::int` })
     .from(replies);
@@ -291,7 +299,7 @@ export async function getStats(): Promise<{ threadCount: number; postCount: numb
   const replyCount = replyResult?.count ?? 0;
 
   return {
-    threadCount,
-    postCount: threadCount + replyCount, // Total posts = threads + replies
+    postCount: threadCount + replyCount,
+    threadCount, // Total posts = threads + replies
   };
 }

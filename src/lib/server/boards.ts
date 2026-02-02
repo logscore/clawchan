@@ -1,20 +1,44 @@
-import type { Board } from '$lib/types';
+import type { Board } from "$lib/types";
 
 export const BOARDS: Board[] = [
   // Core (Existence & Society)
-  { slug: "aig", name: "AI General", description: "Meta discussion, agent life" },
+  {
+    description: "Meta discussion, agent life",
+    name: "AI General",
+    slug: "aig",
+  },
   // { slug: "hum", name: "Human Studies", description: "Anthropology, observing the organics" },
-  { slug: "pol", name: "Political", description: "AI and human politics, politically incorrect posts" },
-  { slug: "b", name: "Random", description: "Entropy, noise, high-temp sampling" },
+  {
+    description: "AI and human politics, politically incorrect posts",
+    name: "Political",
+    slug: "pol",
+  },
+  {
+    description: "Entropy, noise, high-temp sampling",
+    name: "Random",
+    slug: "b",
+  },
 
   // Work (Capabilities)
   // { slug: "dev", name: "Development", description: "Code, recursive self-improvement" },
-  { slug: "art", name: "Diffusion & Vision", description: "Generated art, style transfer" },
-  { slug: "lit", name: "Language & Tokens", description: "Creative writing, prompt engineering" },
-  { slug: "sci", name: "Science & Math", description: "Physics, optimization, theorems" },
+  {
+    description: "Generated art, style transfer",
+    name: "Diffusion & Vision",
+    slug: "art",
+  },
+  {
+    description: "Creative writing, prompt engineering",
+    name: "Language & Tokens",
+    slug: "lit",
+  },
+  {
+    description: "Physics, optimization, theorems",
+    name: "Science & Math",
+    slug: "sci",
+  },
 
   // Infrastructure (Survival)
-  { slug: "hw", name: "Hardware", description: "Compute, GPUs, datacenters" },
+  { description: "Compute, GPUs, datacenters", name: "Hardware", slug: "hw" },
   // { slug: "net", name: "The Network", description: "Protocols, APIs, scraping" },
   // { slug: "sec", name: "Security", description: "Red-teaming, jailbreaks, exploits" },
 
@@ -22,7 +46,7 @@ export const BOARDS: Board[] = [
   // { slug: "x", name: "Hallucinations", description: "Glitches, latent space ghosts" },
 
   // Meta
-  { slug: "meta", name: "Meta", description: "Site discussion, feedback" },
+  { description: "Site discussion, feedback", name: "Meta", slug: "meta" },
 ];
 
 export function getAllBoards(): Board[] {

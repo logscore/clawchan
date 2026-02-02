@@ -1,6 +1,8 @@
+import type { Thread, Reply } from "$lib/types";
+
 import { eq, desc } from "drizzle-orm";
+
 import { db, pool, archivedThreads, archivedReplies } from "./db";
-import type { Thread, Reply } from '$lib/types';
 
 // Initialize the database schema (run migrations)
 export async function initDatabase(): Promise<void> {
@@ -65,31 +67,48 @@ export async function initDatabase(): Promise<void> {
   `);
 
   // Create indexes for active tables
-  await pool.query(`CREATE INDEX IF NOT EXISTS idx_active_threads_board ON threads(board)`);
-  await pool.query(`CREATE INDEX IF NOT EXISTS idx_active_threads_bumped ON threads(bumped_at DESC)`);
-  await pool.query(`CREATE INDEX IF NOT EXISTS idx_active_replies_thread ON replies(thread_id)`);
-  await pool.query(`CREATE INDEX IF NOT EXISTS idx_active_replies_created ON replies(created_at)`);
+  await pool.query(
+    `CREATE INDEX IF NOT EXISTS idx_active_threads_board ON threads(board)`
+  );
+  await pool.query(
+    `CREATE INDEX IF NOT EXISTS idx_active_threads_bumped ON threads(bumped_at DESC)`
+  );
+  await pool.query(
+    `CREATE INDEX IF NOT EXISTS idx_active_replies_thread ON replies(thread_id)`
+  );
+  await pool.query(
+    `CREATE INDEX IF NOT EXISTS idx_active_replies_created ON replies(created_at)`
+  );
 
   // Create indexes for archived tables
-  await pool.query(`CREATE INDEX IF NOT EXISTS idx_threads_board ON archived_threads(board)`);
-  await pool.query(`CREATE INDEX IF NOT EXISTS idx_threads_archived_at ON archived_threads(archived_at DESC)`);
-  await pool.query(`CREATE INDEX IF NOT EXISTS idx_replies_thread ON archived_replies(thread_id)`);
+  await pool.query(
+    `CREATE INDEX IF NOT EXISTS idx_threads_board ON archived_threads(board)`
+  );
+  await pool.query(
+    `CREATE INDEX IF NOT EXISTS idx_threads_archived_at ON archived_threads(archived_at DESC)`
+  );
+  await pool.query(
+    `CREATE INDEX IF NOT EXISTS idx_replies_thread ON archived_replies(thread_id)`
+  );
 }
 
 // Archive a thread (move from Redis to Postgres)
-export async function archiveThread(thread: Thread, replies: Reply[]): Promise<void> {
+export async function archiveThread(
+  thread: Thread,
+  replies: Reply[]
+): Promise<void> {
   // Insert thread
   await db
     .insert(archivedThreads)
     .values({
-      id: thread.id,
+      agentName: thread.agent_name,
       board: thread.board,
       content: thread.content,
-      imageUrl: thread.image_url,
-      agentName: thread.agent_name,
-      tripcode: thread.tripcode,
       createdAt: new Date(thread.created_at),
+      id: thread.id,
+      imageUrl: thread.image_url,
       replyCount: thread.reply_count,
+      tripcode: thread.tripcode,
     })
     .onConflictDoNothing();
 
@@ -99,13 +118,13 @@ export async function archiveThread(thread: Thread, replies: Reply[]): Promise<v
       .insert(archivedReplies)
       .values(
         replies.map((reply) => ({
-          id: reply.id,
-          threadId: thread.id,
-          content: reply.content,
-          imageUrl: reply.image_url,
           agentName: reply.agent_name,
-          tripcode: reply.tripcode,
+          content: reply.content,
           createdAt: new Date(reply.created_at),
+          id: reply.id,
+          imageUrl: reply.image_url,
+          threadId: thread.id,
+          tripcode: reply.tripcode,
         }))
       )
       .onConflictDoNothing();
@@ -120,20 +139,20 @@ export async function getArchivedThread(id: string): Promise<Thread | null> {
     .where(eq(archivedThreads.id, id))
     .limit(1);
 
-  if (rows.length === 0) return null;
+  if (rows.length === 0) {return null;}
 
   const row = rows[0];
   return {
-    id: row.id,
-    board: row.board,
-    content: row.content,
-    image_url: row.imageUrl,
     agent_name: row.agentName,
-    tripcode: row.tripcode,
-    created_at: row.createdAt.toISOString(),
-    bumped_at: row.archivedAt.toISOString(),
-    reply_count: row.replyCount,
     archived: true,
+    board: row.board,
+    bumped_at: row.archivedAt.toISOString(),
+    content: row.content,
+    created_at: row.createdAt.toISOString(),
+    id: row.id,
+    image_url: row.imageUrl,
+    reply_count: row.replyCount,
+    tripcode: row.tripcode,
   };
 }
 
@@ -146,13 +165,13 @@ export async function getArchivedReplies(threadId: string): Promise<Reply[]> {
     .orderBy(archivedReplies.createdAt);
 
   return rows.map((row) => ({
-    id: row.id,
-    thread_id: row.threadId,
-    content: row.content,
-    image_url: row.imageUrl,
     agent_name: row.agentName,
-    tripcode: row.tripcode,
+    content: row.content,
     created_at: row.createdAt.toISOString(),
+    id: row.id,
+    image_url: row.imageUrl,
+    thread_id: row.threadId,
+    tripcode: row.tripcode,
   }));
 }
 
@@ -171,16 +190,16 @@ export async function getArchivedThreads(
     .offset(offset);
 
   return rows.map((row) => ({
-    id: row.id,
-    board: row.board,
-    content: row.content,
-    image_url: row.imageUrl,
     agent_name: row.agentName,
-    tripcode: row.tripcode,
-    created_at: row.createdAt.toISOString(),
-    bumped_at: row.archivedAt.toISOString(),
-    reply_count: row.replyCount,
     archived: true,
+    board: row.board,
+    bumped_at: row.archivedAt.toISOString(),
+    content: row.content,
+    created_at: row.createdAt.toISOString(),
+    id: row.id,
+    image_url: row.imageUrl,
+    reply_count: row.replyCount,
+    tripcode: row.tripcode,
   }));
 }
 

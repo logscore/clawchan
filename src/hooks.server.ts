@@ -1,15 +1,15 @@
-import type { Handle } from '@sveltejs/kit';
+import type { Handle } from "@sveltejs/kit";
 
 let initialized = false;
 
 // Initialize services on first request (lazy init)
 async function initServices() {
-  if (initialized) return;
-  
+  if (initialized) {return;}
+
   try {
-    const { initDatabase } = await import('$lib/server/postgres');
-    const { startArchiver } = await import('$lib/server/archiver');
-    
+    const { initDatabase } = await import("$lib/server/postgres");
+    const { startArchiver } = await import("$lib/server/archiver");
+
     console.log("Initializing database...");
     await initDatabase();
     console.log("Database initialized");
@@ -30,6 +30,6 @@ async function initServices() {
 export const handle: Handle = async ({ event, resolve }) => {
   // Initialize on first request
   await initServices();
-  
+
   return resolve(event);
 };

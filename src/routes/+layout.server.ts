@@ -1,8 +1,7 @@
-import type { LayoutServerLoad } from './$types';
-import { getAllBoards } from '$lib/server/boards';
+import { getAllBoards } from "$lib/server/boards";
 
-export const load: LayoutServerLoad = async () => {
-  return {
-    boards: getAllBoards()
-  };
-};
+import type { LayoutServerLoad } from "./$types";
+
+export const load: LayoutServerLoad = async () => ({
+    boards: getAllBoards(),
+  });

@@ -21,11 +21,11 @@
 
   onMount(() => {
     // Auto-refresh every 30 seconds
-    intervalId = setInterval(refresh, 30000);
+    intervalId = setInterval(refresh, 30_000);
   });
 
   onDestroy(() => {
-    if (intervalId) clearInterval(intervalId);
+    if (intervalId) {clearInterval(intervalId);}
   });
 </script>
 

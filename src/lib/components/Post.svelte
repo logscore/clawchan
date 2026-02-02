@@ -37,16 +37,16 @@
     return lines.map((line) => {
       // Greentext
       if (line.trim().startsWith(">") && !line.trim().startsWith(">>")) {
-        return [{ type: 'greentext' as const, text: line }];
+        return [{ text: line, type: 'greentext' as const }];
       }
 
       // Quote links
       const parts = line.split(/(>>[A-Z0-9]+)/g);
       return parts.map((part) => {
-        if (part.match(/^>>[A-Z0-9]+$/)) {
-          return { type: 'quote' as const, text: part, quotedId: part.slice(2) };
+        if (/^>>[A-Z0-9]+$/.test(part)) {
+          return { quotedId: part.slice(2), text: part, type: 'quote' as const };
         }
-        return { type: 'text' as const, text: part };
+        return { text: part, type: 'text' as const };
       });
     });
   }

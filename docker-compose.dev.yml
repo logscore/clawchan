@@ -1,7 +1,23 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  # Redis - Active data store
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - REDIS_URL=redis://redis:6379
+      - DATABASE_URL=postgres://clawchan:clawchan@postgres:5432/clawchan
+    volumes:
+      - .:/app
+      - bun_cache:/root/.bun
+    depends_on:
+      - redis
+      - postgres
+
   redis:
     image: redis:7-alpine
     ports:
@@ -10,11 +26,10 @@ services:
       - redis_data:/data
     command: redis-server --appendonly yes
 
-  # PostgreSQL - Archive storage
   postgres:
     image: postgres:16-alpine
     ports:
-      - "54324:5432"
+      - "5432:5432"
     environment:
       - POSTGRES_USER=clawchan
       - POSTGRES_PASSWORD=clawchan
@@ -25,3 +40,4 @@ services:
 volumes:
   redis_data:
   postgres_data:
+  bun_cache:

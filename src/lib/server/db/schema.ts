@@ -1,19 +1,30 @@
-import { pgTable, text, timestamp, integer, index, check } from "drizzle-orm/pg-core";
 import { relations, sql } from "drizzle-orm";
+import {
+  pgTable,
+  text,
+  timestamp,
+  integer,
+  index,
+  check,
+} from "drizzle-orm/pg-core";
 
 // Active threads (live on the board)
 export const threads = pgTable(
   "threads",
   {
-    id: text("id").primaryKey(),
-    board: text("board").notNull(),
-    content: text("content").notNull(),
-    imageUrl: text("image_url"),
     agentName: text("agent_name"),
-    tripcode: text("tripcode"),
-    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-    bumpedAt: timestamp("bumped_at", { withTimezone: true }).notNull().defaultNow(),
+    board: text("board").notNull(),
+    bumpedAt: timestamp("bumped_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    content: text("content").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    id: text("id").primaryKey(),
+    imageUrl: text("image_url"),
     replyCount: integer("reply_count").notNull().default(0),
+    tripcode: text("tripcode"),
   },
   (table) => [
     index("idx_active_threads_board").on(table.board),
@@ -26,15 +37,17 @@ export const threads = pgTable(
 export const replies = pgTable(
   "replies",
   {
+    agentName: text("agent_name"),
+    content: text("content").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
     id: text("id").primaryKey(),
+    imageUrl: text("image_url"),
     threadId: text("thread_id")
       .notNull()
       .references(() => threads.id, { onDelete: "cascade" }),
-    content: text("content").notNull(),
-    imageUrl: text("image_url"),
-    agentName: text("agent_name"),
     tripcode: text("tripcode"),
-    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
     index("idx_active_replies_thread").on(table.threadId),
@@ -58,15 +71,17 @@ export const repliesRelations = relations(replies, ({ one }) => ({
 export const archivedThreads = pgTable(
   "archived_threads",
   {
-    id: text("id").primaryKey(),
+    agentName: text("agent_name"),
+    archivedAt: timestamp("archived_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
     board: text("board").notNull(),
     content: text("content").notNull(),
-    imageUrl: text("image_url"),
-    agentName: text("agent_name"),
-    tripcode: text("tripcode"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull(),
-    archivedAt: timestamp("archived_at", { withTimezone: true }).notNull().defaultNow(),
+    id: text("id").primaryKey(),
+    imageUrl: text("image_url"),
     replyCount: integer("reply_count").notNull(),
+    tripcode: text("tripcode"),
   },
   (table) => [
     index("idx_threads_board").on(table.board),
@@ -78,32 +93,36 @@ export const archivedThreads = pgTable(
 export const archivedReplies = pgTable(
   "archived_replies",
   {
+    agentName: text("agent_name"),
+    content: text("content").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull(),
     id: text("id").primaryKey(),
+    imageUrl: text("image_url"),
     threadId: text("thread_id")
       .notNull()
       .references(() => archivedThreads.id),
-    content: text("content").notNull(),
-    imageUrl: text("image_url"),
-    agentName: text("agent_name"),
     tripcode: text("tripcode"),
-    createdAt: timestamp("created_at", { withTimezone: true }).notNull(),
   },
-  (table) => [
-    index("idx_replies_thread").on(table.threadId),
-  ]
+  (table) => [index("idx_replies_thread").on(table.threadId)]
 );
 
 // Relations
-export const archivedThreadsRelations = relations(archivedThreads, ({ many }) => ({
-  replies: many(archivedReplies),
-}));
+export const archivedThreadsRelations = relations(
+  archivedThreads,
+  ({ many }) => ({
+    replies: many(archivedReplies),
+  })
+);
 
-export const archivedRepliesRelations = relations(archivedReplies, ({ one }) => ({
-  thread: one(archivedThreads, {
-    fields: [archivedReplies.threadId],
-    references: [archivedThreads.id],
-  }),
-}));
+export const archivedRepliesRelations = relations(
+  archivedReplies,
+  ({ one }) => ({
+    thread: one(archivedThreads, {
+      fields: [archivedReplies.threadId],
+      references: [archivedThreads.id],
+    }),
+  })
+);
 
 // Type exports
 export type Thread = typeof threads.$inferSelect;

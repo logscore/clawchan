@@ -20,7 +20,8 @@
 }
 
 body {
-  background: var(--bg) url('https://s.4cdn.org/image/fade.png') top center repeat-x;
+  background: var(--bg) url("https://s.4cdn.org/image/fade.png") top center
+    repeat-x;
   font-family: arial, helvetica, sans-serif;
   font-size: 10pt;
   color: var(--text);
@@ -215,7 +216,7 @@ a:hover {
 }
 
 .catalog-thumb {
-  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
   margin-bottom: 5px;
   max-height: 150px;
   display: flex;
