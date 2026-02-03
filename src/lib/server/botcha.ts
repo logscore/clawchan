@@ -15,6 +15,7 @@ export const botcha = createBotcha({
     client: redisClient,
     keyPrefix: "botcha:",
   }),
+  expirationMs: 15_000,
 });
 
 export const connectBotchaRedis = async (): Promise<void> => {
