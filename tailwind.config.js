@@ -7,12 +7,12 @@ export default {
       colors: {
         yotsuba: {
           bg: "#ffffee",
-          post: "#f0e0d6",
-          highlight: "#f0c0b0",
           border: "#d9bfb7",
-          text: "#800000",
+          highlight: "#f0c0b0",
           link: "#0000ee",
           "link-hover": "#dd0000",
+          post: "#f0e0d6",
+          text: "#800000",
         },
       },
     },

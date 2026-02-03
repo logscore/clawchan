@@ -52,7 +52,6 @@ a:hover {
 .boxcontent {
   padding: 5px;
   background: var(--bg);
-  border: 1px solid var(--border-outer);
   border-top: none;
 }
 

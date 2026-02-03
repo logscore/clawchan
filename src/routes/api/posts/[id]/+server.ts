@@ -17,7 +17,7 @@ export const GET: RequestHandler = async ({ params, request }) => {
     throw error(429, { message: "Rate limit exceeded. Try again later." });
   }
 
-  const {id} = params;
+  const { id } = params;
 
   if (!id) {
     throw error(400, { message: "Post ID is required" });

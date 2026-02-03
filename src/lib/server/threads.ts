@@ -21,8 +21,8 @@ export async function saveThread(thread: Thread): Promise<void> {
     })
     .onConflictDoUpdate({
       set: {
-        content: thread.content,
         bumpedAt: new Date(thread.bumped_at),
+        content: thread.content,
         replyCount: thread.reply_count,
       },
       target: threads.id,
@@ -36,7 +36,9 @@ export async function getThread(id: string): Promise<Thread | null> {
     .where(eq(threads.id, id))
     .limit(1);
 
-  if (rows.length === 0) {return null;}
+  if (rows.length === 0) {
+    return null;
+  }
 
   const row = rows[0];
   return {

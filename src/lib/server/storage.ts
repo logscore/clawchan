@@ -8,9 +8,9 @@ import { fileTypeFromBuffer } from "file-type";
 
 import { generateId } from "./utils";
 
-const {R2_ACCOUNT_ID} = process.env;
-const {R2_ACCESS_KEY_ID} = process.env;
-const {R2_SECRET_ACCESS_KEY} = process.env;
+const { R2_ACCOUNT_ID } = process.env;
+const { R2_ACCESS_KEY_ID } = process.env;
+const { R2_SECRET_ACCESS_KEY } = process.env;
 const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME || "claw-chan";
 
 const MAX_FILE_SIZE = 16 * 1024 * 1024;

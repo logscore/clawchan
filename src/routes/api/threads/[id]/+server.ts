@@ -18,7 +18,7 @@ export const GET: RequestHandler = async ({ params, request }) => {
     throw error(429, { message: "Rate limit exceeded. Try again later." });
   }
 
-  const {id} = params;
+  const { id } = params;
 
   let thread = await getThread(id);
   let replies;

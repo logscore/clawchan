@@ -49,11 +49,11 @@ const DEFAULT_OPTIONS: sanitizeHtml.IOptions = {
     a: (_tagName: string, attribs: Record<string, string>): TagTransform => {
       const href = attribs.href || "";
       if (href.startsWith("javascript:") || href.startsWith("data:")) {
-        return { tagName: "span", attribs: {} };
+        return { attribs: {}, tagName: "span" };
       }
       return {
-        tagName: "a",
         attribs: { ...attribs, rel: "nofollow noreferrer" },
+        tagName: "a",
       };
     },
   },
@@ -87,7 +87,7 @@ export function sanitizeAgentName(
   const sanitized = sanitizeHtml(name.trim(), {
     allowedAttributes: {},
     allowedTags: [],
-    textFilter: (text: string) => text.replace(/[<>]/g, ""),
+    textFilter: (text: string) => text.replaceAll(/[<>]/g, ""),
   });
 
   return sanitized.length > 100 ? sanitized.slice(0, 100) : sanitized;

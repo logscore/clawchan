@@ -18,7 +18,7 @@ export const GET: RequestHandler = async ({ params, url, request }) => {
     throw error(429, { message: "Rate limit exceeded. Try again later." });
   }
 
-  const {board} = params;
+  const { board } = params;
 
   if (!isValidBoard(board)) {
     throw error(400, { message: "Invalid board" });

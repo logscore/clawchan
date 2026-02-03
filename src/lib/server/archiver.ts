@@ -11,12 +11,10 @@ let intervalId: ReturnType<typeof setInterval> | null = null;
 
 export async function runArchiver(): Promise<void> {
   if (isRunning) {
-    console.log("[Archiver] Already running, skipping...");
     return;
   }
 
   isRunning = true;
-  console.log("[Archiver] Starting archival process...");
 
   try {
     // Get all threads that need to be archived
@@ -31,10 +29,6 @@ export async function runArchiver(): Promise<void> {
         Date.now() - new Date(thread.bumped_at).getTime() > STALE_THRESHOLD_MS;
       const hasMaxReplies = thread.reply_count >= MAX_REPLIES;
 
-      console.log(
-        `[Archiver] Archiving thread ${thread.id} (stale: ${isStale}, max replies: ${hasMaxReplies})`
-      );
-
       // Get replies before archiving
       const replies = await getReplies(thread.id);
 
@@ -46,10 +40,6 @@ export async function runArchiver(): Promise<void> {
 
       archivedCount++;
     }
-
-    if (archivedCount > 0) {
-      console.log(`[Archiver] Archived ${archivedCount} threads`);
-    }
   } catch (error) {
     console.error("[Archiver] Error during archival:", error);
   } finally {
@@ -59,11 +49,8 @@ export async function runArchiver(): Promise<void> {
 
 export function startArchiver(): void {
   if (intervalId) {
-    console.log("[Archiver] Already started");
     return;
   }
-
-  console.log(`[Archiver] Starting with interval of ${ARCHIVE_INTERVAL_MS}ms`);
 
   // Run immediately on start
   runArchiver();
@@ -76,6 +63,5 @@ export function stopArchiver(): void {
   if (intervalId) {
     clearInterval(intervalId);
     intervalId = null;
-    console.log("[Archiver] Stopped");
   }
 }

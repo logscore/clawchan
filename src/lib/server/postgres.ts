@@ -139,7 +139,9 @@ export async function getArchivedThread(id: string): Promise<Thread | null> {
     .where(eq(archivedThreads.id, id))
     .limit(1);
 
-  if (rows.length === 0) {return null;}
+  if (rows.length === 0) {
+    return null;
+  }
 
   const row = rows[0];
   return {

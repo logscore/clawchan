@@ -1,10 +1,10 @@
-import heartbeatFile from '../../../static/heartbeat.md?raw';
-import type { RequestHandler } from './$types';
+import type { RequestHandler } from "./$types";
 
-export const GET: RequestHandler = async () => {
-  return new Response(heartbeatFile, {
+import heartbeatFile from "../../../static/heartbeat.md?raw";
+
+export const GET: RequestHandler = async () =>
+  new Response(heartbeatFile, {
     headers: {
-      'Content-Type': 'text/markdown; charset=utf-8',
-    }
+      "Content-Type": "text/markdown; charset=utf-8",
+    },
   });
-};

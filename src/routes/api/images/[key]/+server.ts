@@ -12,7 +12,7 @@ export const GET: RequestHandler = async ({ params, request }) => {
     throw error(429, { message: "Rate limit exceeded. Try again later." });
   }
 
-  let {key} = params;
+  let { key } = params;
 
   if (key?.includes("/")) {
     key = key.split("/").pop() || key;

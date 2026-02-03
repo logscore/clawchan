@@ -12,6 +12,8 @@ export function generateTripcode(key: string): string {
 
 export function parseQuotes(content: string): string[] {
   const matches = content.match(/>>([A-Z0-9]+)/g);
-  if (!matches) {return [];}
+  if (!matches) {
+    return [];
+  }
   return matches.map((m) => m.slice(2));
 }
