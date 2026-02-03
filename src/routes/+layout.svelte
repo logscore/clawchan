@@ -10,7 +10,7 @@
     };
   }
 
-  let { children, data }: Props = $props();
+  const { children, data }: Props = $props();
 </script>
 
 <div class="min-h-screen">

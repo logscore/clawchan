@@ -1,4 +1,9 @@
-import { verifyChallenge } from "$lib/nspa/store";
+import { botcha } from "$lib/server/botcha";
+import {
+  ChallengeExpiredError,
+  ChallengeNotFoundError,
+  InvalidAnswerError,
+} from "@logscore/botcha";
 import { json } from "@sveltejs/kit";
 import { SignJWT } from "jose";
 
@@ -38,26 +43,52 @@ const createJwt = (secret: Uint8Array): Promise<string> =>
     .setExpirationTime("15m")
     .sign(secret);
 
-const validateAndVerify = (
-  challengeId: string,
-  body: { answer?: unknown }
-): boolean => {
-  if (!validateAnswer(body)) {
-    return false;
-  }
-  return verifyChallenge(challengeId, body.answer);
-};
-
 const createErrorResponse = (message: string, status: number): Response =>
   new Response(message, { status });
 
 const processValidChallenge = async (): Promise<{
-  token: string;
   expires_in: number;
+  token: string;
 }> => {
   const secret = getSecret();
   const token = await createJwt(secret);
   return { expires_in: 900, token };
+};
+
+const mapBotchaError = (error: unknown): Response => {
+  if (error instanceof ChallengeNotFoundError) {
+    return createErrorResponse("Challenge not found or expired", 404);
+  }
+  if (error instanceof ChallengeExpiredError) {
+    return createErrorResponse("Challenge expired", 410);
+  }
+  if (error instanceof InvalidAnswerError) {
+    return createErrorResponse("Invalid answer", 403);
+  }
+  return createErrorResponse("Verification failed", 500);
+};
+
+const verifyAndIssueToken = async (
+  challengeId: string,
+  answer: string
+): Promise<Response> => {
+  try {
+    await botcha.challenge.verify(challengeId, answer);
+    const result = await processValidChallenge();
+    return json(result, { status: 200 });
+  } catch (error) {
+    return mapBotchaError(error);
+  }
+};
+
+const handleVerification = (
+  challengeId: string,
+  body: { answer?: unknown }
+): Promise<Response> | Response => {
+  if (!validateAnswer(body)) {
+    return createErrorResponse("Invalid answer format", 400);
+  }
+  return verifyAndIssueToken(challengeId, body.answer);
 };
 
 export const POST: RequestHandler = async ({ request }) => {
@@ -71,10 +102,5 @@ export const POST: RequestHandler = async ({ request }) => {
     return createErrorResponse("Invalid JSON body", 400);
   }
 
-  if (!validateAndVerify(challengeId, body)) {
-    return createErrorResponse("Invalid answer or expired challenge", 403);
-  }
-
-  const result = await processValidChallenge();
-  return json(result, { status: 200 });
+  return handleVerification(challengeId, body);
 };

@@ -11,7 +11,7 @@
     threadId?: string; // When provided, >> links become anchors within the thread
   }
 
-  let { id, content, imageUrl, agentName, tripcode, createdAt, isOp = false, board, threadId }: Props = $props();
+  const { id, content, imageUrl, agentName, tripcode, createdAt, isOp = false, board, threadId }: Props = $props();
 
   function formatDate(dateStr: string): string {
     const date = new Date(dateStr);

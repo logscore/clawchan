@@ -1,7 +1,7 @@
-import { createChallenge } from "$lib/nspa/store";
+import { botcha } from "$lib/server/botcha";
 
-export const POST = (): Response => {
-  const { id, text } = createChallenge();
+export const POST = async (): Promise<Response> => {
+  const { id, text } = await botcha.challenge.create();
 
   return new Response(text, {
     headers: {
