@@ -12,7 +12,7 @@
     };
   }
 
-  let { data }: Props = $props();
+  const { data }: Props = $props();
   let intervalId: ReturnType<typeof setInterval> | undefined;
 
   function refresh() {

@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.980.0",
-    "@logscore/botcha": "^1.1.0",
+    "@logscore/botcha": "^1.1.1",
     "drizzle-orm": "^0.45.1",
     "file-type": "^21.3.0",
     "ioredis": "^5.9.2",
