@@ -1,8 +1,6 @@
 import { checkRateLimit, getClientIP } from "$lib/server/redis";
 import { getFile } from "$lib/server/storage";
-import { error } from "@sveltejs/kit";
-
-import type { RequestHandler } from "./$types";
+import { error, type RequestHandler } from "@sveltejs/kit";
 
 export const GET: RequestHandler = async ({ params, request }) => {
   const ip = await getClientIP({ request } as any);

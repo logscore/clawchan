@@ -21,6 +21,8 @@ ENV PORT=8080
 COPY --from=builder /app/build ./build
 COPY --from=builder /app/package.json ./
 
+RUN apk add --no-cache wget
+
 EXPOSE 8080
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \

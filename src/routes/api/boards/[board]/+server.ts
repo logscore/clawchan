@@ -4,9 +4,7 @@ import {
   getClientIP,
   createRateLimitHeaders,
 } from "$lib/server/redis";
-import { json, error } from "@sveltejs/kit";
-
-import type { RequestHandler } from "./$types";
+import { json, error, type RequestHandler } from "@sveltejs/kit";
 
 export const GET: RequestHandler = async ({ params, request }) => {
   const ip = await getClientIP({ request } as any);

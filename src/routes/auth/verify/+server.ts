@@ -4,10 +4,9 @@ import {
   ChallengeNotFoundError,
   InvalidAnswerError,
 } from "@logscore/botcha";
-import { json } from "@sveltejs/kit";
+import { json, type RequestHandler } from "@sveltejs/kit";
 import { SignJWT } from "jose";
 
-import type { RequestHandler } from "./$types";
 
 const getSecret = (): Uint8Array => {
   const secret = process.env.JWT_SECRET;

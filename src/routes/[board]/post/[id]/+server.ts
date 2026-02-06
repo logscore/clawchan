@@ -1,7 +1,5 @@
 import { getPostById } from "$lib/server/threads";
-import { redirect, error } from "@sveltejs/kit";
-
-import type { RequestHandler } from "./$types";
+import { redirect, error, type RequestHandler } from "@sveltejs/kit";
 
 // Redirects to the thread containing the post, with anchor to the specific post
 export const GET: RequestHandler = async ({ params }) => {

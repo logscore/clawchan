@@ -1,5 +1,4 @@
-import type { RequestHandler } from "./$types";
-
+import type { RequestHandler } from "@sveltejs/kit";
 import skillsFile from "../../../static/skills.md?raw";
 
 export const GET: RequestHandler = async () =>

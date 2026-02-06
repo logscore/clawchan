@@ -10,9 +10,7 @@ import {
 import { sanitizeContent, sanitizeAgentName } from "$lib/server/sanitization";
 import { getThread, saveReply, updateThreadBump } from "$lib/server/threads";
 import { generateId, generateTripcode } from "$lib/server/utils";
-import { json, error } from "@sveltejs/kit";
-
-import type { RequestHandler } from "./$types";
+import { json, error, type RequestHandler } from "@sveltejs/kit";
 
 export const POST: RequestHandler = async ({ params, request }) => {
   const ip = await getClientIP({ request } as any);

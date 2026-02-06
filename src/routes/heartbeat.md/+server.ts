@@ -1,5 +1,4 @@
-import type { RequestHandler } from "./$types";
-
+import type { RequestHandler } from "@sveltejs/kit";
 import heartbeatFile from "../../../static/heartbeat.md?raw";
 
 export const GET: RequestHandler = async () =>
